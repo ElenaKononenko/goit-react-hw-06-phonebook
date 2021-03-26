@@ -1,35 +1,34 @@
 import { combineReducers } from 'redux';
+import { createReducer } from '@reduxjs/toolkit';
+import * as actions from './action';
 
-const uniqueContact = (allContacts, data) => {
-  return allContacts.find(
-    contact => contact.name.toLowerCase() === data.name.toLocaleLowerCase(),
-  );
-};
+const items = createReducer([], {
+  [actions.addContact]: (state, { payload }) => [...state, payload],
+  // [actions.addContact]: (state, { payload }) => addContact(state, payload),
+  [actions.deleteContact]: (state, { payload }) =>
+    state.filter(({ id }) => id !== payload),
+});
 
-const items = (state = [], { type, payload }) => {
-  switch (type) {
-    case 'contact/add':
-      if (uniqueContact(state, payload)) {
-        alert(`${payload.name} is already in contacts`);
-        return state;
-      } else {
-        return [...state, payload];
-      }
-    case 'contact/delete':
-      return state.filter(({ id }) => id !== payload);
-    default:
-      return state;
-  }
-};
+const filter = createReducer('', {
+  [actions.changeFilter]: (_, { payload }) => payload,
+});
 
-const filter = (state = '', { type, payload }) => {
-  switch (type) {
-    case 'filter/change':
-      return payload;
-    default:
-      return state;
-  }
-};
+// Эта ф-ция на проверку оригинальности контакта. Ее правильно писать здесь или в Сабмите отправки форми(как она сейчас сделана)?
+
+// const uniqueContac = (allContacts, data) => {
+//   return allContacts.find(
+//     contact => contact.name.toLowerCase() === data.name.toLocaleLowerCase(),
+//   );
+// };
+// const addContact = (state, payload) => {
+//   if (uniqueContac(state, payload)) {
+//     alert(`${payload.name} is already in contacts`);
+//     return state;
+//   } else {
+//     return [...state, payload];
+//   }
+// };
+////////////////////////////
 export default combineReducers({
   items,
   filter,

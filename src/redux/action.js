@@ -1,27 +1,12 @@
 import { v4 as uui } from 'uuid';
+import { createAction } from '@reduxjs/toolkit';
 
-export const addContact = data => ({
-  type: 'contact/add',
+export const addContact = createAction('contact/add', data => ({
   payload: {
     id: uui(),
     name: data.name,
     number: data.number,
   },
-});
-export const deleteContact = contactId => ({
-  type: 'contact/delete',
-  payload: contactId,
-});
-export const changeFilter = value => ({
-  type: 'filter/change',
-  payload: value,
-});
-
-// export const addLocal = value => ({
-//   type: 'local/add',
-//   payload: value,
-// });
-// export const getLocal = value => ({
-//   type: 'local/get',
-//   payload: value,
-// });
+}));
+export const changeFilter = createAction('filter/change');
+export const deleteContact = createAction('contact/delete');

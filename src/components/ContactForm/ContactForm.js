@@ -21,8 +21,17 @@ class ContactForm extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    this.props.onSubmit(this.state);
-    this.reset();
+    const { onSubmit, value } = this.props;
+    const uniqueContact = value.find(
+      item => item.name.toLowerCase() === this.state.name.toLocaleLowerCase(),
+    );
+    if (!uniqueContact) {
+      onSubmit(this.state);
+      this.reset();
+      return;
+    }
+    alert(`${this.state.name} is already in contacts`);
+    // this.reset();
   };
 
   render() {
@@ -63,10 +72,12 @@ class ContactForm extends Component {
   }
 }
 
+const mapStateToProps = state => ({ value: state.contacts.items });
+
 const mapDispatchToProps = dispatch => ({
   onSubmit: obj => dispatch(actions.addContact(obj)),
 });
-export default connect(null, mapDispatchToProps)(ContactForm);
+export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);
 
 ContactForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
